@@ -42,14 +42,14 @@ elif dep == "DCL":
 elif dep == "REJ":
     deposito = "REJ"
     if end_day == '> 180':
+
         filtered_rej = rej_periodos[rej_periodos["Dias sem Giro"] > start_day]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_rej, hide_index=True)
-
+        st.dataframe(filtered_rej.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True )
     else:
         filtered_rej = rej_periodos[(rej_periodos["Dias sem Giro"] > start_day) & (rej_periodos["Dias sem Giro"] <= end_day)]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_rej, hide_index=True)
+        st.dataframe(filtered_rej.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True)
 
 
 else:
