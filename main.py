@@ -11,7 +11,7 @@ dep = st.sidebar.radio(
 # Título da aplicação
 deposito = dep
 st.title('Acompanhamento de Depósitos')
-st.header(f':red[{deposito}]', divider='gray')
+st.header(f':red[{deposito}]', divider='rainbow')
 
 
 
@@ -21,7 +21,7 @@ col1.metric("0 a 30 dias", "25")
 col2.metric("30 a 60 dias", "30")
 col3.metric("60 a 90 dias", "35")
 col4.metric("acima de 180 dias", "5")
-st.subheader('', divider='gray')
+st.subheader('', divider='rainbow')
 
 
 
@@ -32,11 +32,7 @@ start_day, end_day = st.sidebar.select_slider(
     options=[0, 30, 60, 90, 180, '> 180'],
     value=(0, '> 180'))
 
-dep = st.sidebar.radio(
-    "Selecione o Depósito:",
-    ["PL3", "DCL", "REJ", "VCL"],
-    index=1,
-)
+
 
 # Lógica de filtragem
 if dep == "PL3":
@@ -61,16 +57,10 @@ else:
 
         filtered_vcl = vcl_periodos[vcl_periodos["Dias sem Giro"] > start_day]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_vcl, hide_index=True)
+        st.dataframe(filtered_vcl.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True )
     else:
         filtered_vcl = vcl_periodos[(vcl_periodos["Dias sem Giro"] > start_day) & (vcl_periodos["Dias sem Giro"] <= end_day)]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_vcl, hide_index=True)
+        st.dataframe(filtered_vcl.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True)
         
 
-# Exibindo os resultados filtrados
-#st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-#st.dataframe(filtered_vcl, hide_index=True)
-#
-#st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-#st.dataframe(filtered_rej, hide_index=True)
