@@ -2,7 +2,7 @@ import streamlit as st
 from vcl import vcl, vcl_periodos
 from rej import rej, rej_periodos
 from dcl import dcl, dcl_periodos
-from pl3 import pl3, pl3_periodos
+from pl3 import pl3, pl3_periodos, metricspl3
 
 
 dep = st.sidebar.radio(
@@ -16,14 +16,22 @@ st.title('Acompanhamento de Depósitos')
 st.header(f':red[{deposito}]', divider='rainbow')
 
 
+if dep == 'PL3':
 
-st.subheader('Quantidade de Códigos')
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("0 a 30 dias", "25")
-col2.metric("30 a 60 dias", "30")
-col3.metric("60 a 90 dias", "35")
-col4.metric("acima de 180 dias", "5")
-st.subheader('', divider='rainbow')
+    st.subheader('Quantidade de Códigos sem Giro')
+    col1, col2, col3, col4, col5 = st.columns(5)
+    cont_0_30 = metricspl3['Total'][0]
+    cont_30_60 = metricspl3['Total'][1]
+    cont_60_90 = metricspl3['Total'][2]
+    cont_maior_180 = metricspl3['Total'][3]
+    cont_90_180 = metricspl3['Total'][4]
+
+    col1.metric("0 a 30 dias", f"{cont_0_30}")
+    col2.metric("30 a 60 dias", f"{cont_30_60}")
+    col3.metric("60 a 90 dias", f"{cont_60_90}")
+    col4.metric("90 a 180 dias", f"{cont_90_180}")
+    col5.metric("acima de 180 dias", f"{cont_maior_180}")
+    st.subheader('', divider='rainbow')
 
 
 
@@ -42,11 +50,13 @@ if dep == "PL3":
 
         filtered_pl3 = pl3_periodos[pl3_periodos["Dias sem Giro"] > start_day]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_pl3.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True )
+        filtered_pl3 = filtered_pl3.drop(['Dias sem Giro'], axis=1)
+        st.dataframe(filtered_pl3.drop_duplicates(), hide_index=True, use_container_width=True)
     else:
         filtered_pl3 = pl3_periodos[(pl3_periodos["Dias sem Giro"] > start_day) & (pl3_periodos["Dias sem Giro"] <= end_day)]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_pl3.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True)
+        filtered_pl3 = filtered_pl3.drop(['Dias sem Giro'], axis=1)
+        st.dataframe(filtered_pl3.drop_duplicates(), hide_index=True, use_container_width=True)
 elif dep == "DCL":
     if end_day == '> 180':
 
