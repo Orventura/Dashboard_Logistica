@@ -2,6 +2,7 @@ import streamlit as st
 from vcl import vcl, vcl_periodos
 from rej import rej, rej_periodos
 from dcl import dcl, dcl_periodos
+from pl3 import pl3, pl3_periodos
 
 
 dep = st.sidebar.radio(
@@ -37,7 +38,15 @@ start_day, end_day = st.sidebar.select_slider(
 
 # Lógica de filtragem
 if dep == "PL3":
-    pass
+    if end_day == '> 180':
+
+        filtered_pl3 = pl3_periodos[pl3_periodos["Dias sem Giro"] > start_day]
+        st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
+        st.dataframe(filtered_pl3.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True )
+    else:
+        filtered_pl3 = pl3_periodos[(pl3_periodos["Dias sem Giro"] > start_day) & (pl3_periodos["Dias sem Giro"] <= end_day)]
+        st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
+        st.dataframe(filtered_pl3.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True)
 elif dep == "DCL":
     if end_day == '> 180':
 
@@ -48,6 +57,7 @@ elif dep == "DCL":
         filtered_dcl = dcl_periodos[(dcl_periodos["Dias sem Giro"] > start_day) & (dcl_periodos["Dias sem Giro"] <= end_day)]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
         st.dataframe(filtered_dcl.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True)
+
 elif dep == "REJ":
     deposito = "REJ"
     if end_day == '> 180':
