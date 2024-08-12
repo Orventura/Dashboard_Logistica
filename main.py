@@ -1,5 +1,5 @@
 import streamlit as st
-from Deps.vcl import vcl_periodos
+from Deps.vcl import vcl_periodos, metricsvcl
 from Deps.rej import rej_periodos, metricsrej
 from Deps.dcl import dcl_periodos, metricsdcl
 from Deps.pl3 import pl3_periodos, metricspl3
@@ -65,6 +65,22 @@ elif dep == "REJ":
     col5.metric("acima de 180 dias", f"{cont_maior_180}")
     st.subheader('', divider='rainbow')
 
+elif dep == "VCL":
+    st.subheader('Quantidade de Códigos sem Giro')
+    col1, col2, col3, col4, col5 = st.columns(5)
+    cont_0_30 = metricsvcl[metricsvcl['Permanência'] == '0 a 30 dias']['Total'].sum()
+    cont_30_60 = metricsvcl[metricsvcl['Permanência'] == '30 a 60 dias']['Total'].sum()
+    cont_60_90 = metricsvcl[metricsvcl['Permanência'] == '60 a 90 dias']['Total'].sum()
+    cont_90_180 = metricsvcl[metricsvcl['Permanência'] == '90 a 180 dias']['Total'].sum()
+    cont_maior_180 = metricsvcl[metricsvcl['Permanência'] == 'Acima de 180 dias']['Total'].sum()
+
+    col1.metric("0 a 30 dias", f"{cont_0_30}")
+    col2.metric("30 a 60 dias", f"{cont_30_60}")
+    col3.metric("60 a 90 dias", f"{cont_60_90}")
+    col4.metric("90 a 180 dias", f"{cont_90_180}")
+    col5.metric("acima de 180 dias", f"{cont_maior_180}")
+    st.subheader('', divider='rainbow')
+
 
 
 # Slider de seleção de intervalo de dias
@@ -121,10 +137,12 @@ else:
 
         filtered_vcl = vcl_periodos[vcl_periodos["Dias sem Giro"] > start_day]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_vcl.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True )
+        filtered_vcl = filtered_vcl.drop(['Dias sem Giro'], axis=1)
+        st.dataframe(filtered_vcl.drop_duplicates(), hide_index=True, use_container_width=True)
     else:
         filtered_vcl = vcl_periodos[(vcl_periodos["Dias sem Giro"] > start_day) & (vcl_periodos["Dias sem Giro"] <= end_day)]
         st.subheader(f"Produtos de {start_day} a {end_day} dias sem giro")
-        st.dataframe(filtered_vcl.drop(["Dias sem Giro"], axis=1), hide_index=True, use_container_width=True)
+        filtered_vcl = filtered_vcl.drop(['Dias sem Giro'], axis=1)
+        st.dataframe(filtered_vcl.drop_duplicates(), hide_index=True, use_container_width=True)
         
 

@@ -33,22 +33,43 @@ con.register("tabela_vcl", vcl)
 
 vcl_periodos = con.sql(
 """
-SELECT
-    Item,
-    Descrição,
+    SELECT
+        Item,
+        Descrição,
 
-CASE 
+    CASE 
 
-WHEN "Dias sem Giro" > 0 AND "Dias sem Giro" <= 30 THEN '0 a 30 dias'
-WHEN "Dias sem Giro" > 30 AND "Dias sem Giro" <= 60 THEN '30 a 60 dias'
-WHEN "Dias sem Giro" > 60 AND "Dias sem Giro" <= 90 THEN '60 a 90 dias'
-WHEN "Dias sem Giro" > 90 AND "Dias sem Giro" <= 180 THEN 'Acima de 90 dias'
-WHEN "Dias sem Giro" >= 180 THEN 'Acima de 180 dias'
-END Permanência, "Dias sem Giro"
-FROM    
-    tabela_vcl
-ORDER BY
-    "Dias sem Giro" DESC
-    
+        WHEN "Dias sem Giro" > 0 AND "Dias sem Giro" <= 30 THEN '0 a 30 dias'
+        WHEN "Dias sem Giro" > 30 AND "Dias sem Giro" <= 60 THEN '30 a 60 dias'
+        WHEN "Dias sem Giro" > 60 AND "Dias sem Giro" <= 90 THEN '60 a 90 dias'
+        WHEN "Dias sem Giro" > 90 AND "Dias sem Giro" <= 180 THEN '90 a 180 dias'
+        WHEN "Dias sem Giro" >= 180 THEN 'Acima de 180 dias'
+        END Permanência, "Dias sem Giro"
+    FROM    
+        tabela_vcl
+    GROUP BY
+        Item, Descrição, "Dias sem Giro"
+    ORDER BY
+        "Dias sem Giro" DESC
     
 """).df()
+
+# Dataframe com Quantidade de Itens sem giro por Período
+vcl_metrics = vcl_periodos.drop(['Dias sem Giro'], axis=1)
+vcl_metrics = vcl_metrics.drop_duplicates()
+
+con.register("metrics_vcl", vcl_metrics)
+
+metricsvcl = con.sql(
+"""
+    SELECT
+        Permanência,
+        COUNT(Permanência) AS Total
+    FROM
+        metrics_vcl
+    GROUP BY 
+        Permanência
+    ORDER BY
+        Permanência
+"""
+).df()
