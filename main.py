@@ -87,7 +87,7 @@ elif dep == "VCL":
 start_day, end_day = st.sidebar.select_slider(
     "Selecione o período em dias",
     options=[0, 30, 60, 90, 180, '> 180'],
-    value=(0, '> 180'))
+    value=(0, '> 5000'))
 
 
 
