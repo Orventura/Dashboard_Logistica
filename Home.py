@@ -8,7 +8,7 @@ if 'file' not in st.session_state:
     st.session_state['file'] = None
 
 # Carrega o arquivo
-uploaded_file = st.file_uploader("Escolha um arquivo CSV ou Excel", type=['csv', 'xlsx'])
+uploaded_file = st.file_uploader("Escolha um arquivo Excel", type=['xlsx'])
 
 if uploaded_file is not None:
     # Lê o arquivo e o armazena no session_state
