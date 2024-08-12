@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title("Carregar Arquivo")
+st.title("Carregar Arquivozzzzzzzzz")
 
 # Verifica se o arquivo já está carregado
 if 'file' not in st.session_state:
