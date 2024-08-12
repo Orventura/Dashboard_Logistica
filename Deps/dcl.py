@@ -1,14 +1,25 @@
 import pandas as pd
 import duckdb as dk
 
+import streamlit as st
 
 
-local_excel = r"H:\EXPEDICAO\00 Painel de Controle\Programação\DCB003\DCB003.xlsx"
+
+# Verifica se o arquivo foi carregado
+if st.session_state.get('file') is not None:
+    dcb = st.session_state['file']
+
+else:
+    st.warning("Nenhum arquivo carregado. Por favor, carregue um arquivo na primeira página.")
+
+
+print(dcb)
+#local_excel = dcb
 # Carrega o arquivo CSV
 #caminho = 'DCB 20240304.csv'
 #dcb = pd.read_csv(caminho, sep=';', encoding='ANSI')
 
-dcb = pd.read_excel(local_excel, decimal=',')
+#dcb = pd.read_excel(local_excel, decimal=',')
 
 # Conecta ao banco de dados DuckDB
 con = dk.connect()

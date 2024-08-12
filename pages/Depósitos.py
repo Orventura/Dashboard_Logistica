@@ -1,9 +1,9 @@
 import streamlit as st
+import pandas as pd
 from Deps.vcl import vcl_periodos, metricsvcl
 from Deps.rej import rej_periodos, metricsrej
 from Deps.dcl import dcl_periodos, metricsdcl
 from Deps.pl3 import pl3_periodos, metricspl3
-
 
 dep = st.sidebar.radio(
     "Selecione o Depósito:",
@@ -87,7 +87,7 @@ elif dep == "VCL":
 start_day, end_day = st.sidebar.select_slider(
     "Selecione o período em dias",
     options=[0, 30, 60, 90, 180, '> 180'],
-    value=(0, '> 5000'))
+    value=(0, '> 180'))
 
 
 
